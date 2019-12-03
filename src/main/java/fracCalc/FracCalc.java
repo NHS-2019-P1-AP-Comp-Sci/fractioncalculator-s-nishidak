@@ -37,47 +37,174 @@ public class FracCalc {
     	int firstspace = input.indexOf(" ");
     	String first = new String(input.substring(0,firstspace));
     	String notfirst = new String(input.substring(firstspace+1));
-    	String operator = new String(notfirst.substring(0,1));
+    	char operator = notfirst.charAt(0);
     	String second = new String(notfirst.substring(2));
     	
-    	String firstcomp = breakdown(first);
-    	String secondcomp = breakdown(second);
-    	
-  		return secondcomp;	
-    	
-    	
-        // TODO: Implement this function to produce the solution to the input
-    	 
-    	
-    }
-
-    // TODO: Fill in the space below with any helper methods that you think you will need
-    public static String breakdown(String value) {
-    	int underscore =  value.indexOf("_");
-    	int divide = value.indexOf("/");
-    	String num = "";
-    	String top = "";
-    	String bot = "";
+     	int underscore =  first.indexOf("_");
+    	int divide = first.indexOf("/");
+    	String firstnum = "";
+    	String firsttop = "";
+    	String firstbot = "";
     	if (underscore != -1) {
-    		num = new String(value.substring(0,underscore));
+    		firstnum = new String(first.substring(0,underscore));
     	}
     	else {
     		if (divide == -1) {
-    			num = value;
+    			firstnum = first;
     		}
     		else {
-    			num = "0";
+    			firstnum = "0";
     		}
     	}
     	if (divide != -1) {
-    		top = new String(value.substring(underscore+1,divide));
-    		bot = new String(value.substring(divide+1));
+    		firsttop = new String(first.substring(underscore+1,divide));
+    		firstbot = new String(first.substring(divide+1));
     	}
     	else {
-    		top = "0";
-    		bot = "1";
+    		firsttop = "0";
+    		firstbot = "1";
     	}
     	
-    	return "whole:"+ num + " numerator:" + top + " denominator:"+bot;
+     	underscore =  second.indexOf("_");
+    	divide = second.indexOf("/");
+    	String secondnum = "";
+    	String secondtop = "";
+    	String secondbot = "";
+    	if (underscore != -1) {
+    		secondnum = new String(second.substring(0,underscore));
+    	}
+    	else {
+    		if (divide == -1) {
+    			secondnum = second;
+    		}
+    		else {
+    			secondnum = "0";
+    		}
+    	}
+    	if (divide != -1) {
+    		secondtop = new String(second.substring(underscore+1,divide));
+    		secondbot = new String(second.substring(divide+1));
+    	}
+    	else {
+    		secondtop = "0";
+    		secondbot = "1";
+    	}
+    	
+        // TODO: Implement this function to produce the solution to the input
+    	int firstwhole = Integer.parseInt(firstnum);
+    	int firstnume = Integer.parseInt(firsttop);
+    	if (firstwhole < 0) {
+    		firstnume *=-1;
+    	}
+    	int firstden = Integer.parseInt(firstbot);
+    	int secondwhole = Integer.parseInt(secondnum);
+    	int secondnume = Integer.parseInt(secondtop);
+    	if (secondwhole < 0) {
+    		secondnume *=-1;
+    	}
+    	int secondden = Integer.parseInt(secondbot);
+    	String ans = "";
+    	if (operator == '+') {
+    		ans = add(firstwhole, firstnume, firstden, secondwhole, secondnume, secondden);
+    		return ans;
+    	}
+    	if (operator == '-') {
+    		ans = sub(firstwhole, firstnume, firstden, secondwhole, secondnume, secondden);
+    		return ans;
+    	}
+    	if (operator == '*') {
+    		ans = mult(firstwhole, firstnume, firstden, secondwhole, secondnume, secondden);
+    		return ans;
+    	}
+    	if (operator == '/') {
+    		ans = div(firstwhole, firstnume, firstden, secondwhole, secondnume, secondden);
+    		return ans;
+    	}
+		return ans;
+    		
+    	
+    	
+    	
+    	
+    	
+    }
+    // TODO: Fill in the space below with any helper methods that you think you will need
+    public static String add(int firstwhole, int firstnume, int firstden, int secondwhole, int secondnume, int secondden) {
+    	String ans ="";
+    	int answhole = firstwhole + secondwhole;
+		int anstop = (firstnume * secondden)+(secondnume * firstden);
+		if (anstop < 0) {
+			anstop *=-1;
+		}
+		int ansbot = firstden * secondden;
+		if (answhole == 0) {
+			if(anstop == 0) {
+				ans = "0";
+				return ans;
+    		}
+    		else {
+    			ans = anstop + "/" + ansbot;
+    			return ans;
+    		}
+    	}
+    	else {
+    		if(anstop == 0) {
+    			ans =""+ answhole;
+    			return ans;
+    		}
+    		else {
+    			ans =answhole +"_"+ anstop + "/" + ansbot;
+    			return ans;
+    		}
+    	}
+		
+    }
+    public static String sub(int firstwhole, int firstnume, int firstden, int secondwhole, int secondnume, int secondden) {
+    	String ans ="";
+    	int answhole = firstwhole - secondwhole;
+		int anstop = (firstnume * secondden)-(secondnume * firstden);
+		if (anstop < 0) {
+			anstop *=-1;
+		}
+		int ansbot = firstden * secondden;
+		if (answhole == 0) {
+			if(anstop == 0) {
+				ans = "0";
+				return ans;
+    		}
+    		else {
+    			ans = anstop + "/" + ansbot;
+    			return ans;
+    		}
+    	}
+    	else {
+    		if(anstop == 0) {
+    			ans =""+ answhole;
+    			return ans;
+    		}
+    		else {
+    			ans =answhole +"_"+ anstop + "/" + ansbot;
+    			return ans;
+    		}
+    	}
+    }
+    public static String mult(int firstwhole, int firstnume, int firstden, int secondwhole, int secondnume, int secondden) {
+    	String ans ="";
+    	int firsttop = firstnume + (firstwhole * firstden);
+    	int secondtop = secondnume + (secondwhole * secondden);
+    	int anstop = firsttop * secondtop;
+		int ansbot = firstden * secondden;
+		ans = anstop + "/" +ansbot;
+    	return ans;
+    }
+    public static String div(int firstwhole, int firstnume, int firstden, int secondwhole, int secondnume, int secondden) {
+    	String ans ="";
+    	int firsttop = firstnume + (firstwhole * firstden);
+    	int secondtop = secondnume + (secondwhole * secondden);
+    	int anstop = firsttop * secondden;
+		int ansbot = firstden * secondtop;
+		ans = anstop + "/" +ansbot;
+    	return ans;
     }
 }
+	
